@@ -39,6 +39,7 @@ PROVIDER_PATTERNS = {
     "ProviderDigitalOcean": [r"DIGITALOCEAN"],
     "ProviderGoogleCloud": [r"^GOOGLE\b"],
     "ProviderHetzner": [r"\bHETZNER\b"],
+    "ProviderHostRoyale": [r"\bHOSTROYALE\b"],
     "ProviderIBMCloud": [r"\bSOFTLAYER\b", r"\bIBM\b"],
     "ProviderLeaseweb": [r"\bLEASEWEB\b"],
     "ProviderLinode": [r"\bLINODE\b", r"\bAKAMAI\b"],
