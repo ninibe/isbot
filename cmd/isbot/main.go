@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"zgo.at/isbot"
+	"github.com/ninibe/isbot"
 )
 
 func main() {
