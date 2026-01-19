@@ -20,3 +20,13 @@ wrong. See [`isbot_test.go`](/isbot_test.go) for a list of test cases.
 
 The performance is pretty good; turns out that running a few `string.Contains()`
 is loads faster than a `(bot|crawler|search|...)` regexp.
+
+### Updating IP ranges
+
+The cloud provider IP ranges can be updated from the [ip-address-databases](https://github.com/iplocate/ip-address-databases) ASN database:
+
+    python update_ip_ranges.py > ip_ranges_gen.go
+
+The script matches providers by ASN name patterns (e.g., "AMAZON", "CLOUDFLARE").
+If a provider is renamed and no longer matches, the script will exit with an
+error prompting you to update the patterns in `PROVIDER_PATTERNS`.

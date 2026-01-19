@@ -128,8 +128,9 @@ func TestBotIP(t *testing.T) {
 
 		{"68.183.241.134", BotRangeDigitalOcean},
 
-		{"88.212.248.0", BotRangeServersCom},
-		{"88.212.255.255", BotRangeServersCom},
+		// servers.com (from RIPE SERVERS-MNT)
+		{"23.83.64.1", BotRangeServersCom},
+		{"88.211.200.1", BotRangeServersCom},
 
 		// {"2a01:4f8:162:5447::2", BotRangeHetzner},
 		// {"2a01:4f8:140:21ee::2", BotRangeHetzner},

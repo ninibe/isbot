@@ -30,6 +30,16 @@ func (r Result) String() string {
 		13:  "BotRangeAzure",
 		14:  "BotRangeAlibaba",
 		15:  "BotRangeLinode",
+		16:  "BotRangeCloudflare",
+		17:  "BotRangeIBMCloud",
+		18:  "BotRangeOVH",
+		19:  "BotRangeOracleCloud",
+		20:  "BotRangeVultr",
+		21:  "BotRangeContabo",
+		22:  "BotRangeLeaseweb",
+		23:  "BotRangeRackspace",
+		24:  "BotRangeScaleway",
+		25:  "BotRangeTencent",
 		150: "BotJSPhanton",
 		151: "BotJSNightmare",
 		152: "BotJSSelenium",
@@ -62,7 +72,17 @@ const (
 	BotRangeHetzner      = 12 // hetzner.de
 	BotRangeAzure        = 13 // Azure Cloud
 	BotRangeAlibaba      = 14 // Alibaba cloud
-	BotRangeLinode       = 15 // Linode
+	BotRangeLinode       = 15 // Linode / Akamai
+	BotRangeCloudflare   = 16 // Cloudflare
+	BotRangeIBMCloud     = 17 // IBM Cloud
+	BotRangeOVH          = 18 // OVH
+	BotRangeOracleCloud  = 19 // Oracle Cloud
+	BotRangeVultr        = 20 // Vultr
+	BotRangeContabo      = 21 // Contabo
+	BotRangeLeaseweb     = 22 // Leaseweb
+	BotRangeRackspace    = 23 // Rackspace
+	BotRangeScaleway     = 24 // Scaleway
+	BotRangeTencent      = 25 // Tencent Cloud
 )
 
 // These are never set by isbot, but can be used to send signals from JS; for
