@@ -142,6 +142,9 @@ func TestBotIP(t *testing.T) {
 		t.Run(tt.in, func(t *testing.T) {
 			r := &http.Request{Header: make(http.Header), RemoteAddr: tt.in}
 			r.Header.Add("User-Agent", "Your user agent: Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0")
+			r.Header.Add("Accept-Language", "en-US,en;q=0.9")
+			r.Header.Add("Sec-Fetch-Site", "none")
+			r.Header.Add("Sec-Fetch-Mode", "navigate")
 			got := Bot(r)
 			if got != tt.want {
 				t.Errorf("got %s; want %s", got, tt.want)
@@ -169,6 +172,9 @@ func TestNotBotUA(t *testing.T) {
 	for _, b := range notBots {
 		r := &http.Request{Header: make(http.Header)}
 		r.Header.Add("User-Agent", b)
+		r.Header.Add("Accept-Language", "en-US,en;q=0.9")
+		r.Header.Add("Sec-Fetch-Site", "none")
+		r.Header.Add("Sec-Fetch-Mode", "navigate")
 		if Is(Bot(r)) {
 			fail = append(fail, b)
 		}

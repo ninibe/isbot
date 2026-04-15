@@ -40,6 +40,8 @@ func (r Result) String() string {
 		23:  "BotRangeRackspace",
 		24:  "BotRangeScaleway",
 		25:  "BotRangeTencent",
+		26:  "BotNoAcceptLang",
+		27:  "BotNoSecFetch",
 		150: "BotJSPhanton",
 		151: "BotJSNightmare",
 		152: "BotJSSelenium",
@@ -83,6 +85,12 @@ const (
 	BotRangeRackspace    = 23 // Rackspace
 	BotRangeScaleway     = 24 // Scaleway
 	BotRangeTencent      = 25 // Tencent Cloud
+)
+
+// Bots identified by request headers other than User-Agent.
+const (
+	BotNoAcceptLang = 26 // No Accept-Language header.
+	BotNoSecFetch   = 27 // No Sec-Fetch-Site / Sec-Fetch-Mode header.
 )
 
 // These are never set by isbot, but can be used to send signals from JS; for
@@ -133,12 +141,33 @@ func Bot(r *http.Request) Result {
 		return BotPrefetch
 	}
 
-	i := UserAgent(r.UserAgent())
-	if i > 1 {
-		return i
+	ua := UserAgent(r.UserAgent())
+	if ua > 1 {
+		return ua
 	}
 
-	return IPRange(r.RemoteAddr)
+	if ip := IPRange(r.RemoteAddr); Is(ip) {
+		return ip
+	}
+
+	if h := Headers(r.Header); Is(h) {
+		return h
+	}
+
+	return ua
+}
+
+// Headers checks for bot signals in request headers other than User-Agent. It
+// returns BotNoAcceptLang or BotNoSecFetch if the corresponding header is
+// missing, or NoBotNoMatch otherwise.
+func Headers(h http.Header) Result {
+	if h.Get("Accept-Language") == "" {
+		return BotNoAcceptLang
+	}
+	if h.Get("Sec-Fetch-Site") == "" && h.Get("Sec-Fetch-Mode") == "" {
+		return BotNoSecFetch
+	}
+	return NoBotNoMatch
 }
 
 // Prefetch checks if this request is a browser "pre-fetch" request.
