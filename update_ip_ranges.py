@@ -271,8 +271,13 @@ def generate_go_code(providers: dict) -> str:
     lines.append("}")
     lines.append("")
 
-    lines.append("func initCloudRanges() {")
-    lines.append("\tcloudRanges = []cloudIPRange{")
+    # The ranges are emitted as a static table of constants, parsed at first
+    # use. One literal of ~18k mustParseCIDR calls compiled into a single giant
+    # function that took >16 GB of compiler memory under -race.
+    lines.append("var cloudRangeSpecs = []struct {")
+    lines.append("\tcidr     string")
+    lines.append("\tprovider CloudProvider")
+    lines.append("}{")
 
     for provider_const in sorted(providers.keys()):
         networks = providers[provider_const]
@@ -280,11 +285,18 @@ def generate_go_code(providers: dict) -> str:
             continue
 
         provider_name = provider_const.replace("Provider", "")
-        lines.append(f"\t\t// {provider_name}")
+        lines.append(f"\t// {provider_name}")
 
         for network in networks:
-            lines.append(f'\t\tmustParseCIDR("{network}", {provider_const}),')
+            lines.append(f'\t{{"{network}", {provider_const}}},')
 
+    lines.append("}")
+    lines.append("")
+
+    lines.append("func initCloudRanges() {")
+    lines.append("\tcloudRanges = make([]cloudIPRange, len(cloudRangeSpecs))")
+    lines.append("\tfor i, s := range cloudRangeSpecs {")
+    lines.append("\t\tcloudRanges[i] = mustParseCIDR(s.cidr, s.provider)")
     lines.append("\t}")
     lines.append("}")
     lines.append("")
@@ -371,7 +383,7 @@ def main():
     print_stats(providers, merged_providers)
 
     go_code = generate_go_code(merged_providers)
-    print(go_code)
+    sys.stdout.write(go_code)  # already ends with a newline; print() would add a second
 
 
 if __name__ == "__main__":
